@@ -1,73 +1,32 @@
-# SmartSafety360
-Women Safety Website using AI , SOS and Live Location
-AI-Based Women Safety Website
+SAFEHER - LATEST STARTER PROJECT
 
-Your Safety, Our Priority.
+Files:
+- index.html
+- style.css
+- script.js
+- firebase.json
 
-Smart Safety 360 is a bilingual women safety web application designed to make emergency support easier to access through a simple and user-friendly interface.
+IMPORTANT FIREBASE SETUP
+1. Open Firebase Console -> Authentication -> Sign-in method.
+2. Enable Email/Password AND enable the Email link (passwordless sign-in) option.
+3. Open Authentication -> Settings -> Authorized domains.
+4. Ensure localhost and safeher-22e02.web.app are authorized.
+5. In Firebase Console -> Project settings -> Your apps, verify the web app configuration in script.js.
 
- PROJECT OVERVIEW
+RUN LOCALLY
+- Open a terminal in this folder.
+- Run: firebase serve
+  or: firebase emulators:start (only if you have configured emulators).
+- A simple local web server is also acceptable. Do not open index.html directly as file:// for Firebase email-link sign-in.
+- To deploy: firebase deploy --only hosting
 
-The main objective of Smart Safety 360 is to provide women with a digital safety platform featuring emergency assistance, location sharing and AI-based safety guidance.
+SAFETY / LIMITATIONS
+- SOS only prepares an SMS and opens the device messaging app. The user must review and send it.
+- Call 112 directly in an emergency in India.
+- Browser location requires permission and a secure context (HTTPS or localhost).
+- Trusted contacts are stored in this browser's localStorage, not in Firebase or synced between devices.
+- Police station results are community map listings and may be incomplete or outdated. Verify the station independently.
+- This is a student prototype, not a monitored emergency service.
 
- KEY FEATURES
-
-- 🆘 SOS Emergency: Emergency alert simulation.
-- 📍 Location Sharing: Access current location with user permission.
-- 🤖 AI Safety Assistant: Provides basic safety guidance.
-- 👥 Trusted Contacts: Planned emergency contact management.
-- 🌐 Bilingual Interface: Tamil and English language support.
-- 📱 Responsive Design: Designed for desktop and mobile devices.
-
-TECHNOLOGIES USED
-
-Technology| Purpose
-HTML| Website structure
-CSS| User interface design
-JavaScript| Website functionality
-Python| Planned AI backend
-Flask| Planned backend framework
-Firebase| Planned database
-
-PROJECT STRUCTURE
-
-SmartSafety360/
-│
-├── index.html
-├── style.css
-├── script.js
-└── README.md
-
-⚙️ How to Run
-
-1. Clone this repository.
-2. Open the project folder.
-3. Open "index.html" in your browser.
-4. Allow location permission to test location access.
-5. Explore the available features.
-
-🎯 Future Enhancements
-
-- AI-powered safety assistant.
-- Secure emergency contact management.
-- Real-time location sharing.
-- Voice-based assistance in Tamil and English.
-- Nearby emergency support services.
-- Secure cloud database integration.
-
-⚠️ Disclaimer
-
-This is an educational prototype. The SOS feature currently simulates an alert and does not contact police or emergency services. Location sharing is not currently transmitted to trusted contacts.
-
-👩‍💻 Developer
-
-Kishanik
-First-Year Electronics and Communication Engineering Student
-
-💡 Project Vision
-
-To create a simple, accessible and user-friendly digital safety platform that helps women access safety information and support.
-
----
-
-⭐ If you find this project interesting, consider starring this repository!
+SECURITY
+Firebase web configuration values identify the web app and are expected to be present in client code. Protect data with appropriate Firebase Security Rules if you later add Firestore or Storage. Never place service-account private keys or other server secrets in script.js.
