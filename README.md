@@ -30,3 +30,8 @@ SAFETY / LIMITATIONS
 
 SECURITY
 Firebase web configuration values identify the web app and are expected to be present in client code. Protect data with appropriate Firebase Security Rules if you later add Firestore or Storage. Never place service-account private keys or other server secrets in script.js.
+
+
+⭐If you find this project interesting, consider giving the repository a star!
+
+Developed as a hackathon project.
