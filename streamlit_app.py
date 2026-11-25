@@ -10,44 +10,127 @@ st.set_page_config(
     layout="wide",
 )
 
-# -------------------- PINK THEME --------------------
+# -------------------- WHITE & ROSE THEME --------------------
 st.markdown(
     """
     <style>
-    .stApp {
-        background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 55%, #f8bbd0 100%);
-        color: #3d2430;
+    :root {
+        --rose-light: #fff0f5;
+        --rose-border: #f0c4d5;
+        --rose-dark: #b8326b;
+        --rose-hover: #962653;
+        --text: #30232a;
+        --muted: #75656d;
+        --red: #c62828;
     }
 
-    h1, h2, h3 {
-        color: #8e3158 !important;
+    /* Main background */
+    .stApp,
+    [data-testid="stAppViewContainer"],
+    [data-testid="stHeader"] {
+        background: #ffffff !important;
+        color: var(--text) !important;
     }
 
+    /* Sidebar */
     [data-testid="stSidebar"] {
-        background-color: #f9dce7;
+        background: #fff7fa !important;
     }
 
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text) !important;
+    }
+
+    /* General text */
+    p, label, [data-testid="stMarkdownContainer"] {
+        color: var(--text);
+    }
+
+    /* Input boxes */
+    .stTextInput input,
+    .stTextArea textarea,
+    .stNumberInput input {
+        background-color: var(--rose-light) !important;
+        color: var(--text) !important;
+        border: 1px solid var(--rose-border) !important;
+        border-radius: 10px !important;
+    }
+
+    /* Input placeholder text */
+    .stTextInput input::placeholder,
+    .stTextArea textarea::placeholder {
+        color: #927b86 !important;
+        opacity: 1;
+    }
+
+    /* Input focus */
+    .stTextInput input:focus,
+    .stTextArea textarea:focus,
+    .stNumberInput input:focus {
+        border-color: var(--rose-dark) !important;
+        box-shadow: 0 0 0 2px rgba(184, 50, 107, 0.15) !important;
+    }
+
+    /* Select boxes */
+    [data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+        background-color: var(--rose-light) !important;
+        border-color: var(--rose-border) !important;
+        color: var(--text) !important;
+    }
+
+    /* Sign In, Create Account, and other buttons */
     .stButton > button,
     .stFormSubmitButton > button {
-        background-color: #c44578;
-        color: white;
-        border: 1px solid #c44578;
-        border-radius: 12px;
-        font-weight: 600;
+        background-color: var(--rose-dark) !important;
+        color: #ffffff !important;
+        border: 1px solid var(--rose-dark) !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
     }
 
+    /* Button hover */
     .stButton > button:hover,
     .stFormSubmitButton > button:hover {
-        background-color: #8e3158;
-        color: white;
-        border-color: #8e3158;
+        background-color: var(--rose-hover) !important;
+        color: #ffffff !important;
+        border-color: var(--rose-hover) !important;
     }
 
+    /* Important messages: red text */
+    [data-testid="stAlert"] {
+        background-color: #fff1f1 !important;
+        border: 1px solid #e5a0a0 !important;
+        border-radius: 10px !important;
+    }
+
+    [data-testid="stAlert"] p,
+    [data-testid="stAlert"] div,
+    [data-testid="stAlert"] span {
+        color: var(--red) !important;
+    }
+
+    /* Metric cards */
     [data-testid="stMetric"] {
-        background: rgba(255, 255, 255, 0.65);
-        border: 1px solid #f0bfd1;
+        background: #fff7fa !important;
+        border: 1px solid var(--rose-border) !important;
         padding: 14px;
         border-radius: 14px;
+    }
+
+    /* Tabs */
+    button[data-baseweb="tab"] {
+        color: var(--text) !important;
+    }
+
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: var(--rose-dark) !important;
+        border-bottom-color: var(--rose-dark) !important;
+    }
+
+    /* Divider */
+    hr {
+        border-color: var(--rose-border) !important;
     }
     </style>
     """,
@@ -183,7 +266,10 @@ if not st.session_state.token:
                 type="password",
                 key="login_password",
             )
-            login_submit = st.form_submit_button("Sign In", use_container_width=True)
+            login_submit = st.form_submit_button(
+                "Sign In",
+                use_container_width=True,
+            )
 
         if login_submit:
             if not login_email.strip() or not login_password:
