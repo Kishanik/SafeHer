@@ -10,12 +10,13 @@ st.set_page_config(
     layout="wide",
 )
 
-# -------------------- WHITE & ROSE THEME --------------------
+# -------------------- LIGHT ROSE THEME --------------------
 st.markdown(
     """
     <style>
     :root {
-        --rose-light: #fff0f5;
+        --rose-bg: #fff0f5;
+        --rose-input: #fff7fa;
         --rose-border: #f0c4d5;
         --rose-dark: #b8326b;
         --rose-hover: #962653;
@@ -24,40 +25,40 @@ st.markdown(
         --red: #c62828;
     }
 
-    /* Main background */
+    /* Light rose page background */
     .stApp,
     [data-testid="stAppViewContainer"],
     [data-testid="stHeader"] {
-        background: #ffffff !important;
+        background: var(--rose-bg) !important;
         color: var(--text) !important;
     }
 
-    /* Sidebar */
+    /* Light rose sidebar */
     [data-testid="stSidebar"] {
-        background: #fff7fa !important;
+        background: #ffe6ef !important;
     }
 
-    /* Headings */
-    h1, h2, h3, h4, h5, h6 {
-        color: var(--text) !important;
-    }
-
-    /* General text */
-    p, label, [data-testid="stMarkdownContainer"] {
+    /* Headings and normal text */
+    h1, h2, h3, h4, h5, h6,
+    p, label,
+    [data-testid="stMarkdownContainer"] {
         color: var(--text);
     }
 
-    /* Input boxes */
+    /* Light rose input fields */
     .stTextInput input,
     .stTextArea textarea,
-    .stNumberInput input {
-        background-color: var(--rose-light) !important;
+    .stNumberInput input,
+    [data-baseweb="input"] input,
+    [data-baseweb="textarea"] textarea {
+        background-color: var(--rose-input) !important;
         color: var(--text) !important;
         border: 1px solid var(--rose-border) !important;
         border-radius: 10px !important;
+        caret-color: var(--rose-dark) !important;
     }
 
-    /* Input placeholder text */
+    /* Placeholder text */
     .stTextInput input::placeholder,
     .stTextArea textarea::placeholder {
         color: #927b86 !important;
@@ -72,14 +73,21 @@ st.markdown(
         box-shadow: 0 0 0 2px rgba(184, 50, 107, 0.15) !important;
     }
 
+    /* Password visibility button */
+    [data-testid="stTextInput"] button {
+        background: transparent !important;
+        color: var(--rose-dark) !important;
+        border: none !important;
+    }
+
     /* Select boxes */
     [data-testid="stSelectbox"] div[data-baseweb="select"] > div {
-        background-color: var(--rose-light) !important;
+        background-color: var(--rose-input) !important;
         border-color: var(--rose-border) !important;
         color: var(--text) !important;
     }
 
-    /* Sign In, Create Account, and other buttons */
+    /* Dark rose buttons */
     .stButton > button,
     .stFormSubmitButton > button {
         background-color: var(--rose-dark) !important;
@@ -97,7 +105,7 @@ st.markdown(
         border-color: var(--rose-hover) !important;
     }
 
-    /* Important messages: red text */
+    /* Important messages in red */
     [data-testid="stAlert"] {
         background-color: #fff1f1 !important;
         border: 1px solid #e5a0a0 !important;
@@ -128,7 +136,7 @@ st.markdown(
         border-bottom-color: var(--rose-dark) !important;
     }
 
-    /* Divider */
+    /* Dividers */
     hr {
         border-color: var(--rose-border) !important;
     }
@@ -166,8 +174,12 @@ def firebase_error(response):
         "EMAIL_NOT_FOUND": "No account was found for that email.",
         "WEAK_PASSWORD": "Use a password with at least 6 characters.",
         "USER_DISABLED": "This account has been disabled.",
-        "TOO_MANY_ATTEMPTS_TRY_LATER": "Too many attempts. Please wait and try again.",
-        "OPERATION_NOT_ALLOWED": "Enable Email/Password sign-in in Firebase Authentication.",
+        "TOO_MANY_ATTEMPTS_TRY_LATER": (
+            "Too many attempts. Please wait and try again."
+        ),
+        "OPERATION_NOT_ALLOWED": (
+            "Enable Email/Password sign-in in Firebase Authentication."
+        ),
         "API_KEY_INVALID": "The Firebase Web API key is incorrect.",
     }
 
@@ -251,6 +263,7 @@ st.info(
     "SafeHer is not a replacement for emergency assistance."
 )
 
+
 # -------------------- SIGN-IN SCREEN --------------------
 if not st.session_state.token:
     st.subheader("Welcome to SafeHer")
@@ -258,14 +271,20 @@ if not st.session_state.token:
 
     login_tab, register_tab = st.tabs(["Login", "Create Account"])
 
+    # -------------------- LOGIN --------------------
     with login_tab:
         with st.form("login_form"):
-            login_email = st.text_input("Email address", key="login_email")
+            login_email = st.text_input(
+                "Email address",
+                key="login_email",
+            )
+
             login_password = st.text_input(
                 "Password",
                 type="password",
                 key="login_password",
             )
+
             login_submit = st.form_submit_button(
                 "Sign In",
                 use_container_width=True,
@@ -281,27 +300,37 @@ if not st.session_state.token:
                         login_email,
                         login_password,
                     )
+
                     st.session_state.token = user["idToken"]
                     st.session_state.uid = user["localId"]
                     st.session_state.email = user["email"]
+
                     st.rerun()
+
                 except Exception as error:
                     st.error(str(error))
 
+    # -------------------- CREATE ACCOUNT --------------------
     with register_tab:
         with st.form("register_form"):
-            register_email = st.text_input("Email address", key="register_email")
+            register_email = st.text_input(
+                "Email address",
+                key="register_email",
+            )
+
             register_password = st.text_input(
                 "Create password",
                 type="password",
                 key="register_password",
                 help="Use at least 6 characters.",
             )
+
             register_confirm = st.text_input(
                 "Confirm password",
                 type="password",
                 key="register_confirm",
             )
+
             register_submit = st.form_submit_button(
                 "Create Account",
                 use_container_width=True,
@@ -310,10 +339,13 @@ if not st.session_state.token:
         if register_submit:
             if not register_email.strip():
                 st.warning("Enter an email address.")
+
             elif len(register_password) < 6:
                 st.warning("Use a password with at least 6 characters.")
+
             elif register_password != register_confirm:
                 st.warning("The passwords do not match.")
+
             else:
                 try:
                     user = firebase_auth(
@@ -321,11 +353,14 @@ if not st.session_state.token:
                         register_email,
                         register_password,
                     )
+
                     st.session_state.token = user["idToken"]
                     st.session_state.uid = user["localId"]
                     st.session_state.email = user["email"]
+
                     st.success("Account created.")
                     st.rerun()
+
                 except Exception as error:
                     st.error(str(error))
 
@@ -350,6 +385,7 @@ dashboard_tab, contacts_tab, sos_tab, account_tab = st.tabs(
     ["Dashboard", "Trusted Contacts", "SOS Alert", "Account Status"]
 )
 
+
 # -------------------- DASHBOARD TAB --------------------
 with dashboard_tab:
     st.subheader("Safety Overview")
@@ -371,6 +407,7 @@ with dashboard_tab:
         "Do not rely on it as an emergency service."
     )
 
+
 # -------------------- TRUSTED CONTACTS TAB --------------------
 with contacts_tab:
     st.subheader("Trusted Contacts")
@@ -380,11 +417,13 @@ with contacts_tab:
         contact_name = st.text_input("Contact name")
         contact_phone = st.text_input("Phone number")
         contact_relationship = st.text_input("Relationship (optional)")
+
         add_contact_submit = st.form_submit_button("Add Contact")
 
     if add_contact_submit:
         if not contact_name.strip() or not contact_phone.strip():
             st.warning("Enter a contact name and phone number.")
+
         else:
             contact_data = {
                 "name": contact_name.strip(),
@@ -400,8 +439,10 @@ with contacts_tab:
                     st.session_state.token,
                     contact_data,
                 )
+
                 st.success("Contact saved.")
                 st.rerun()
+
             except Exception as error:
                 st.error(f"Could not save contact: {error}")
 
@@ -413,6 +454,7 @@ with contacts_tab:
 
         if not contacts:
             st.info("No trusted contacts have been added yet.")
+
         else:
             for contact_id, contact in contacts.items():
                 with st.container(border=True):
@@ -426,11 +468,16 @@ with contacts_tab:
                         try:
                             database_request(
                                 "DELETE",
-                                f"users/{st.session_state.uid}/contacts/{contact_id}",
+                                (
+                                    f"users/{st.session_state.uid}/contacts/"
+                                    f"{contact_id}"
+                                ),
                                 st.session_state.token,
                             )
+
                             st.success("Contact removed.")
                             st.rerun()
+
                         except Exception as error:
                             st.error(f"Could not remove contact: {error}")
 
@@ -441,9 +488,11 @@ with contacts_tab:
 # -------------------- SOS TAB --------------------
 with sos_tab:
     st.subheader("SOS Alert")
+
     st.warning(
         "This button only records a test event in the database. "
-        "It does not send a message, make a phone call, or contact emergency services."
+        "It does not send a message, make a phone call, "
+        "or contact emergency services."
     )
 
     with st.form("sos_test_form"):
@@ -451,14 +500,19 @@ with sos_tab:
             "Test note",
             value="SafeHer test event",
         )
+
         confirm_test = st.checkbox(
             "I understand this only saves a test record and does not notify anyone."
         )
+
         sos_submit = st.form_submit_button("Save Test SOS Event")
 
     if sos_submit:
         if not confirm_test:
-            st.warning("Confirm that you understand this is only a database test.")
+            st.warning(
+                "Confirm that you understand this is only a database test."
+            )
+
         else:
             event_data = {
                 "note": test_note.strip() or "SafeHer test event",
@@ -473,8 +527,10 @@ with sos_tab:
                     st.session_state.token,
                     event_data,
                 )
+
                 st.success("Test event saved to Firebase.")
                 st.rerun()
+
             except Exception as error:
                 st.error(f"Could not save the test event: {error}")
 
@@ -486,12 +542,14 @@ with sos_tab:
 
         if not events:
             st.info("No test events have been saved.")
+
         else:
             for event in reversed(list(events.values())):
                 st.write(
                     f"**{event.get('note', 'Test event')}** — "
                     f"{event.get('created_at', 'Time unavailable')}"
                 )
+
     except Exception as error:
         st.error(f"Could not load test events: {error}")
 
